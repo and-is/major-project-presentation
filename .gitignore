@@ -1,0 +1,49 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.fdb_latexmk
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+
+# PDF output (optional: ignore if you don't want to track compiled PDFs)
+*.pdf
+
+# Latexmk
+*.run.xml
+
+# Bibliography
+*.bcf
+
+# Glossaries
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+
+# Index files
+*.idx
+*.ilg
+*.ind
+
+# TikZ externalization
+*.tikz
+
+# Editor-specific files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

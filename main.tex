@@ -1,0 +1,312 @@
+% Mid-Term Defense Presentation
+\documentclass[aspectratio=169]{beamer}
+
+% ---------------- THEME SETUP ----------------
+\input{preamble}
+
+% ---------------- DOCUMENT ----------------
+\begin{document}
+
+% ---------------- TITLE SLIDE ----------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------- OUTLINE ----------------
+\begin{frame}{Presentation Outline}
+  \tableofcontents
+\end{frame}
+
+% ---------------- SECTIONS (PLACEHOLDERS) ----------------
+
+\section{Introduction}
+
+% ---------- BACKGROUND ----------
+\begin{frame}{Background: SDN and Load Balancing}
+\begin{itemize}
+    \item Software-Defined Networking (SDN) decouples \textbf{control plane} and \textbf{data plane}, enabling centralized control and programmability.
+    \item Centralized control allows \textbf{global network visibility} and simplified traffic management.
+    \item \textbf{Load balancing} is a core SDN application to:
+    \begin{itemize}
+        \item Reduce congestion
+        \item Improve resource utilization
+        \item Enhance application performance
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ---------- TYPES OF LOAD BALANCING ----------
+\begin{frame}{Load Balancing in SDN}
+\begin{block}{Classification}
+\begin{itemize}
+    \item \textbf{Server Load Balancing}: Distributes client requests across servers
+    \item \textbf{Flow/Switch Load Balancing}: Distributes traffic across network paths
+    \item \textbf{Controller Load Balancing}: Distributes control requests among controllers
+\end{itemize}
+\end{block}
+
+\vspace{0.5em}
+\textbf{Focus of this Project:} \alert{Server Load Balancing}
+\end{frame}
+
+% ---------- TOPOLOGY AND MOTIVATION ----------
+\begin{frame}{Data Center Context and Topology}
+\begin{itemize}
+    \item Data centers host a \textbf{large number of servers} and traffic flows
+    \item \textbf{Fat-Tree Topology} is widely used due to:
+    \begin{itemize}
+        \item Scalability
+        \item Equal-Cost Multi-Path (ECMP)
+        \item Fault tolerance
+    \end{itemize}
+    \item Suitable environment for evaluating server load balancing strategies
+\end{itemize}
+\end{frame}
+
+% ---------- DRL MOTIVATION ----------
+\begin{frame}{Why Deep Reinforcement Learning?}
+\begin{itemize}
+    \item Traditional load balancing methods are \textbf{static or rule-based}
+    \item Fail to adapt to \textbf{dynamic traffic patterns}
+    \item Deep Reinforcement Learning (DRL):
+    \begin{itemize}
+        \item Learns from interaction with network environment
+        \item Adapts decisions based on feedback
+    \end{itemize}
+    \item Algorithms such as \textbf{DQN}, \textbf{PPO}, and \textbf{A3C} show promise for adaptive SDN control
+\end{itemize}
+\end{frame}
+
+% ---------- PROBLEM STATEMENT ----------
+\section{Problem Statement}
+\begin{frame}{Problem Statement}
+\begin{itemize}
+    \item Despite centralized control, efficient server load balancing remains challenging
+    \item Static approaches lead to:
+    \begin{itemize}
+        \item Server overloading
+        \item Resource underutilization
+        \item Increased latency and degraded performance
+    \end{itemize}
+    \item High traffic density in fat-tree topologies increases complexity
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Key Challenge:} Designing an \alert{adaptive, intelligent load balancing mechanism}
+\end{frame}
+
+% ---------- OBJECTIVES ----------
+\section{Objectives}
+\begin{frame}{Project Objectives}
+\begin{enumerate}
+    \item Design and implement DRL-based server load balancing in SDN
+    \item Evaluate performance on a fat-tree data center topology
+    \item Analyze metrics such as:
+    \begin{itemize}
+        \item Throughput
+        \item Latency
+        \item Load distribution fairness
+        \item Resource utilization
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+% ---------- SCOPE ----------
+\section{Scope and Limitations}
+\begin{frame}{Scope of the Project}
+\begin{itemize}
+    \item Focus on \textbf{server load balancing} in SDN-enabled data centers
+    \item Simulation-based evaluation using \textbf{fat-tree topology}
+    \item DQN used as the baseline DRL algorithm
+    \item Other SDN aspects (controller placement, flow scheduling) are out of scope
+\end{itemize}
+\end{frame}
+
+% ---------- LIMITATIONS ----------
+\begin{frame}{Project Limitations}
+\begin{itemize}
+    \item Simulation-only evaluation using Mininet
+    \item Single SDN controller (Ryu)
+    \item Synthetic traffic generation (iperf, Apache Bench)
+    \item No deployment on real SDN hardware
+\end{itemize}
+\end{frame}
+
+% ---------- EXPECTED OUTCOMES ----------
+\section{Expected Outcomes}
+\begin{frame}{Expected Outcomes}
+\begin{itemize}
+    \item Improved network efficiency and reduced congestion
+    \item Intelligent SDN controller with adaptive decision-making capability
+    \item Demonstration of DRL effectiveness in fat-tree data center networks
+\end{itemize}
+\end{frame}
+
+\section{Literature Review}
+
+% ---------- SDN OVERVIEW ----------
+\begin{frame}{Software Defined Networking (SDN)}
+\begin{itemize}
+    \item SDN decouples the \textbf{control plane} from the \textbf{data plane}
+    \item Enables centralized control and global network visibility
+    \item Improves programmability, scalability, and manageability
+    \item Centralization also raises concerns:
+    \begin{itemize}
+        \item Scalability
+        \item Fault tolerance
+        \item Security
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ---------- SDN ARCHITECTURE ----------
+\begin{frame}{SDN Architecture}
+\begin{itemize}
+    \item \textbf{Application Layer}: Network applications (load balancing, security)
+    \item \textbf{Controller}: Logical brain with global network view
+    \item \textbf{Data Plane}: Forwarding devices (e.g., Open vSwitch)
+    \item \textbf{Northbound Interface (NBI)}: APIs for applications
+    \item \textbf{Southbound Interface (OpenFlow)}: Controller-to-switch communication
+\end{itemize}
+\end{frame}
+
+% ---------- CONTROL & DATA PLANE ----------
+\begin{frame}{SDN Control and Data Plane}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Control Plane}
+\begin{itemize}
+    \item Centralized
+    \item Hierarchical
+    \item Distributed
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Data Plane}
+\begin{itemize}
+    \item Hardware switches
+    \item Software switches (OVS)
+    \item Proactive / Reactive / Hybrid rules
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ---------- RYU & OPENFLOW ----------
+\begin{frame}{Ryu Controller and OpenFlow}
+\begin{itemize}
+    \item \textbf{Ryu}: Python-based SDN controller
+    \begin{itemize}
+        \item Modular and lightweight
+        \item Widely used in research and Mininet simulations
+    \end{itemize}
+    \item \textbf{OpenFlow}: Standard southbound protocol
+    \begin{itemize}
+        \item Flow rule installation
+        \item Packet matching, actions, and statistics
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ---------- RL & DRL ----------
+\begin{frame}{Reinforcement Learning and DRL}
+\begin{itemize}
+    \item RL models decision-making as a Markov Decision Process (MDP)
+    \item Agent learns by interacting with the environment
+    \item Objective: maximize cumulative reward
+    \item Deep Reinforcement Learning (DRL):
+    \begin{itemize}
+        \item Uses deep neural networks
+        \item Handles large state and action spaces
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ---------- DRL ALGORITHMS ----------
+\begin{frame}{DRL Algorithms Used in SDN}
+\begin{itemize}
+    \item \textbf{Deep Q-Network (DQN)}
+    \begin{itemize}
+        \item Value-based method
+        \item Experience replay and target network
+    \end{itemize}
+    \item \textbf{Proximal Policy Optimization (PPO)}
+    \begin{itemize}
+        \item Policy-gradient method
+        \item Stable training using clipped objective
+    \end{itemize}
+    \item \textbf{Asynchronous Advantage Actor-Critic (A3C)}
+    \begin{itemize}
+        \item Parallel agents
+        \item Faster convergence
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ---------- RELATED WORK ----------
+\begin{frame}{Related Work: Traditional Approaches}
+\begin{itemize}
+    \item Static load balancing (Round Robin, WRR)
+    \item Metaheuristic methods:
+    \begin{itemize}
+        \item Ant Colony Optimization (ACO)
+        \item Particle Swarm Optimization (PSO)
+    \end{itemize}
+    \item Regression-based heuristics (MRBS)
+    \item Improved latency and utilization, but limited adaptability
+\end{itemize}
+\end{frame}
+
+% ---------- DRL-BASED WORK ----------
+\begin{frame}{Related Work: DRL-Based Load Balancing}
+\begin{itemize}
+    \item Q-learning enhancements for SDN traffic engineering
+    \item CNN-based DQN for fat-tree topologies
+    \item Comparative studies using DQN, PPO, and A3C
+    \item PPO shown to achieve faster convergence and lower latency
+\end{itemize}
+\end{frame}
+
+% ---------- RESEARCH GAP ----------
+\begin{frame}{Research Gap and Motivation}
+\begin{itemize}
+    \item Most studies rely on simulation-only validation
+    \item Limited deployment on real SDN controllers (Ryu/OpenFlow)
+    \item Incomplete comparison across DRL variants
+    \item Emerging models (CNN/Transformer-based DRL) need further validation
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Motivation:} Develop a practical DRL-based load balancer deployable on an SDN controller
+\end{frame}
+
+\input{methodology}
+
+\input{works_done}
+
+\input{works_rem}
+
+\section{Timeline}
+\begin{frame}{Project Timeline}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\linewidth]{Images/timeline2.png}
+    \caption{Project Timeline}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Conclusion}
+\begin{itemize}
+    \item Developed a DRL-enabled SDN load balancing framework with DQN agent.
+    \item Integrated real-time server monitoring and adaptive traffic distribution.
+    \item Initial results show effective learning and promising network performance.
+    \item Framework provides a modular foundation for further experimentation and optimization.
+\end{itemize}
+\end{frame}
+
+\section*{Q \& A}
+\begin{frame}{Thank You}
+  \centering
+  \Large We humbly ask for your suggestions.
+\end{frame}
+
+\end{document}

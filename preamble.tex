@@ -1,0 +1,54 @@
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+\usefonttheme{professionalfonts}
+
+% ---------------- COLOR PALETTE (UNIQUE, NON-BLUE) ----------------
+\definecolor{Primary}{RGB}{48,28,56}      % Deep plum
+\definecolor{Secondary}{RGB}{191,87,0}     % Burnt orange
+\definecolor{Accent}{RGB}{96,96,96}        % Neutral gray
+\definecolor{Background}{RGB}{248,246,244} % Soft off-white
+
+\setbeamercolor{background canvas}{bg=Background}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{structure}{fg=Primary}
+\setbeamercolor{frametitle}{fg=white,bg=Primary}
+\setbeamercolor{title}{fg=white,bg=Primary}
+\setbeamercolor{block title}{fg=white,bg=Primary}
+\setbeamercolor{block body}{fg=black,bg=Background}
+\setbeamercolor{footline}{fg=white,bg=Primary}
+
+% ---------------- FONTS ----------------
+\usepackage{lmodern}
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+
+% ---------------- PACKAGES ----------------
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+% ---------------- FOOTLINE ----------------
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.7\paperwidth,ht=2.5ex,dp=1ex,left]{footline}%
+      \hspace{1em}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1ex,right]{footline}%
+      \insertframenumber{} / \inserttotalframenumber\hspace{1em}
+    \end{beamercolorbox}%
+  }%
+}
+
+\setbeamertemplate{navigation symbols}{}
+
+% ---------------- TITLE INFORMATION ----------------
+\title[SDN Load Balancing using DRL]{Load Balancing in Software Defined Networks Using Deep Reinforcement Learning}
+\author{Andis Paudel (078BEI003), Gunaraj Khatri (078BEI016), Kaushik Bhattarai (078BEI017)}
+\institute{Department of Electronics and Communication Engineering \\ Pulchowk Campus}
+\date{Mid-Term Project Defense}
