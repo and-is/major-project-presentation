@@ -10,9 +10,10 @@ Deep Reinforcement Learning-Based Load Balancer in Software-Defined Networking (
 
 Install LaTeX distribution:
 
+```bash
 sudo apt update  
 sudo apt install texlive-full
-
+```
 ---
 
 ## Compile the Presentation
