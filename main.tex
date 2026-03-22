@@ -99,11 +99,10 @@
 \section{Objectives}
 \begin{frame}{Project Objectives}
 \begin{enumerate}
-    \item Design and implement DRL-based server load balancing in SDN
+    \item Design and implement DQN-based server load balancing in SDN
     \item Evaluate performance on a fat-tree data center topology
     \item Analyze metrics such as:
     \begin{itemize}
-        \item Throughput
         \item Latency
         \item Load distribution fairness
         \item Resource utilization
@@ -117,47 +116,13 @@
 \begin{itemize}
     \item Focus on \textbf{server load balancing} in SDN-enabled data centers
     \item Simulation-based evaluation using \textbf{fat-tree topology}
-    \item DQN used as the baseline DRL algorithm
+    \item DQN used as the DRL algorithm
     \item Other SDN aspects (controller placement, flow scheduling) are out of scope
 \end{itemize}
 \end{frame}
 
-% ---------- LIMITATIONS ----------
-\begin{frame}{Project Limitations}
-\begin{itemize}
-    \item Simulation-only evaluation using Mininet
-    \item Single SDN controller (Ryu)
-    \item Synthetic traffic generation (iperf, Apache Bench)
-    \item No deployment on real SDN hardware
-\end{itemize}
-\end{frame}
-
-% ---------- EXPECTED OUTCOMES ----------
-\section{Expected Outcomes}
-\begin{frame}{Expected Outcomes}
-\begin{itemize}
-    \item Improved network efficiency and reduced congestion
-    \item Intelligent SDN controller with adaptive decision-making capability
-    \item Demonstration of DRL effectiveness in fat-tree data center networks
-\end{itemize}
-\end{frame}
 
 \section{Literature Review}
-
-% ---------- SDN OVERVIEW ----------
-\begin{frame}{Software Defined Networking (SDN)}
-\begin{itemize}
-    \item SDN decouples the \textbf{control plane} from the \textbf{data plane}
-    \item Enables centralized control and global network visibility
-    \item Improves programmability, scalability, and manageability
-    \item Centralization also raises concerns:
-    \begin{itemize}
-        \item Scalability
-        \item Fault tolerance
-        \item Security
-    \end{itemize}
-\end{itemize}
-\end{frame}
 
 % ---------- SDN ARCHITECTURE ----------
 \begin{frame}{SDN Architecture}
@@ -221,27 +186,6 @@
 \end{itemize}
 \end{frame}
 
-% ---------- DRL ALGORITHMS ----------
-\begin{frame}{DRL Algorithms Used in SDN}
-\begin{itemize}
-    \item \textbf{Deep Q-Network (DQN)}
-    \begin{itemize}
-        \item Value-based method
-        \item Experience replay and target network
-    \end{itemize}
-    \item \textbf{Proximal Policy Optimization (PPO)}
-    \begin{itemize}
-        \item Policy-gradient method
-        \item Stable training using clipped objective
-    \end{itemize}
-    \item \textbf{Asynchronous Advantage Actor-Critic (A3C)}
-    \begin{itemize}
-        \item Parallel agents
-        \item Faster convergence
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
 % ---------- RELATED WORK ----------
 \begin{frame}{Related Work: Traditional Approaches}
 \begin{itemize}
@@ -269,39 +213,20 @@
 % ---------- RESEARCH GAP ----------
 \begin{frame}{Research Gap and Motivation}
 \begin{itemize}
-    \item Most studies rely on simulation-only validation
+    \item Most studies rely on small topologies-only validation
     \item Limited deployment on real SDN controllers (Ryu/OpenFlow)
-    \item Incomplete comparison across DRL variants
     \item Emerging models (CNN/Transformer-based DRL) need further validation
 \end{itemize}
 
 \vspace{0.5em}
-\textbf{Motivation:} Develop a practical DRL-based load balancer deployable on an SDN controller
+\textbf{Motivation:} Develop a practical DQN-based load balancer deployable on an SDN controller
 \end{frame}
 
 \input{methodology}
 
 \input{works_done}
 
-\input{works_rem}
-
-\section{Timeline}
-\begin{frame}{Project Timeline}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.3\linewidth]{Images/timeline2.png}
-    \caption{Project Timeline}
-\end{figure}
-\end{frame}
-
-\begin{frame}{Conclusion}
-\begin{itemize}
-    \item Developed a DRL-enabled SDN load balancing framework with DQN agent.
-    \item Integrated real-time server monitoring and adaptive traffic distribution.
-    \item Initial results show effective learning and promising network performance.
-    \item Framework provides a modular foundation for further experimentation and optimization.
-\end{itemize}
-\end{frame}
+% \input{works_rem}
 
 \section*{Q \& A}
 \begin{frame}{Thank You}

@@ -1,4 +1,4 @@
-\section{Work Completed}
+\section{Works Completed}
 \begin{frame}{System Setup and Environment Configuration}
 \begin{itemize}
     \item Linux-based development environment (Arch Linux)
@@ -137,34 +137,109 @@
     \caption{DRL Agent Decision Logs}
 \end{figure}
 \end{frame}
-\begin{frame}{Training and Performance Metrics}
+
+
+% ================= Q LEARNING =================
+\begin{frame}{Neural Network Implementation}
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/metrics.png}
+    \includegraphics[width=0.75\linewidth]{Images/neuralnet.png}
+    \caption{Neural Network}
+\end{figure}
+\end{frame}
+
+% ================= SYSTEM INTEGRATION =================
+
+\begin{frame}{System Integration}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.25\linewidth]{Images/arch.png}
+    \caption{DRL-SDN System Architecture}
+\end{figure}
+\end{frame}
+
+% ================= TRAINING METRICS =================
+\begin{frame}{Training Metrics}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.55\linewidth]{Images/training_summary.png}
     \caption{Training Metrics Over Episodes}
 \end{figure}
 \end{frame}
-\begin{frame}{Discussion and Observations}
+
+% ================= CHECKPOINTING =================
+\begin{frame}{Model Checkpointing}
 \begin{itemize}
-    \item Functional DRL-SDN pipeline established
-    \item DQN agent shows stable learning behavior
-    \item Adaptive traffic distribution observed
-    \item Framework supports multiple traffic patterns
+    \item Model saved every 10 episodes
+    \item Evaluation run every 20 episodes ($\epsilon=0$)
+    \item Final model stored after training
+    \item Logs saved as JSON for analysis
 \end{itemize}
 \end{frame}
+
+% ================= INFERENCE =================
+\begin{frame}{Inference Mode (Evaluation)}
+\begin{itemize}
+    \item Exploration disabled ($\epsilon = 0$)
+    \item Agent acts purely on learned policy
+    \item Traffic: 80 requests/sec for 120 seconds
+    \item System polled every second
+\end{itemize}
+\end{frame}
+
+% ================= INFERENCE RESULTS =================
+\begin{frame}{Inference Results}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{Images/inference.png}
+    \caption{Evaluation Output}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Inference Results}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{Images/inference_plot.png}
+    \caption{Results During Evaluation}
+\end{figure}
+\end{frame}
+
+
+
+% ================= OBSERVATIONS =================
+\begin{frame}{Observations}
+\begin{itemize}
+    \item Agent learns near-uniform load distribution
+    \item Reward stabilizes across episodes
+    \item Latency improves compared to naive routing
+    \item System adapts to traffic variations
+\end{itemize}
+\end{frame}
+
+% ================= LIMITATIONS =================
 \begin{frame}{Current Limitations}
 \begin{itemize}
-    \item Metric collection latency affects stability
-    \item Hyperparameter tuning still ongoing
-    \item Limited scalability validation (3 servers)
-    \item Mininet does not fully model hardware queues
+    \item Simulation-only evaluation using Mininet
+    \item Single SDN controller (Ryu)
+    \item Synthetic traffic generation (Apache Bench)
+    \item No deployment on real SDN hardware
+    \item Small-scale topology (3 servers)
+    \item Delays in metric collection
+    \item Hyperparameter sensitivity
+    \item Mininet lacks hardware-level realism
 \end{itemize}
 \end{frame}
+
+
+% ================= SUMMARY =================
 \begin{frame}{Summary of Accomplishments}
 \begin{itemize}
-    \item SDN environment fully operational
-    \item Fat-tree topology successfully deployed
-    \item DRL agent integrated with controller
-    \item Online training and evaluation enabled
+    \item Complete DRL-SDN pipeline implemented
+    \item MDP formulation and DQN training completed
+    \item Real traffic-based training executed
+    \item Inference evaluation with fairness and latency metrics
+    \item System ready for benchmarking and scaling
 \end{itemize}
 \end{frame}

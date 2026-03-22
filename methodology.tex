@@ -39,112 +39,204 @@
 \end{itemize}
 \end{frame}
 
-% ================= Frame 1: State =================
-\begin{frame}{State Space}
-\begin{block}{Server Metrics at Time $t$}
-The agent observes the following vector of metrics for $S$ backend servers:
+% ================= MDP =================
+\begin{frame}{MDP Formulation}
+The load balancing problem is modeled as a Markov Decision Process:
+
 \[
-\mathbf{s}_t = 
-\big[
-\text{cpu}_1, \text{memory}_1, \text{rtt}_1, \text{connections}_1, \text{requests}_1, \text{load\_score}_1, \;
-\text{cpu}_2, \dots, \text{load\_score}_S
-\big]
+\mathcal{M} = (S, A, R, \gamma)
 \]
 
 \begin{itemize}
-    \item $\text{cpu}_j$ = CPU usage of server $j$ (0--1)
-    \item $\text{memory}_j$ = memory usage of server $j$ (0--1)
-    \item $\text{rtt}_j$ = round-trip time to server $j$
-    \item $\text{connections}_j$ = number of active connections
-    \item $\text{requests}_j$ = total requests handled
-    \item $\text{load\_score}_j$ = overall server load (0--1)
+    \item $S$: State space (server metrics)
+    \item $A$: Action space (server selection)
+    \item $R$: Reward function
+    \item $\gamma$: Discount factor
 \end{itemize}
-\end{block}
+
+\textbf{Objective:}
+\[
+\max \; \mathbb{E} \left[ \sum_{t=0}^{\infty} \gamma^t R_t \right]
+\]
+
+\textbf{Markov Property:}
+\begin{itemize}
+    \item Current state encodes all relevant past information
+    \item No need for explicit history (state stacking avoided)
+\end{itemize}
 \end{frame}
 
+% ================= State =================
+\begin{frame}{State Space Design}
+At timestep $t$, the agent observes:
 
-% ================= Frame 2: Action =================
+\[
+s_t \in \mathbb{R}^9
+\]
+
+State is a compact server-centric representation:
+\begin{itemize}
+    \item Captures load distribution
+    \item Captures server health (liveness)
+    \item Avoids switch-level statistics
+\end{itemize}
+\end{frame}
+
+% ================= State Breakdown =================
+\begin{frame}{State Vector Components}
+Each state consists of 3 feature groups:
+
+\textbf{1. Connection Share (3)}
+\[
+\text{ConnShare}_i = \frac{C_i}{\sum_j C_j}
+\]
+
+(Default: $[1/3, 1/3, 1/3]$ if no connections)
+
+\vspace{0.3cm}
+
+\textbf{2. Load Scores (3)}
+\begin{itemize}
+    \item Normalized $[0,1]$
+    \item Derived from CPU, memory, connections
+    \item Masked by liveness
+\end{itemize}
+
+\textbf{3. Liveness Flags (3)}
+\[
+\text{Alive}_i \in \{0,1\}
+\]
+\end{frame}
+
+% ================= Final State =================
+\begin{frame}{Final State Representation}
+The final state vector:
+
+\[
+s_t = [
+\text{ConnShare}_1, \text{ConnShare}_2, \text{ConnShare}_3,\;
+\text{Load}_1, \text{Load}_2, \text{Load}_3,\;
+\text{Alive}_1, \text{Alive}_2, \text{Alive}_3
+]
+\]
+
+\begin{itemize}
+    \item Total dimension: 9
+    \item Encodes:
+    \begin{itemize}
+        \item Load balance
+        \item Server utilization
+        \item Server availability
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ================= Action =================
 \begin{frame}{Action Space}
-\begin{block}{Decision per Incoming Flow}
-At each time step $t$, the agent selects a backend server for each incoming flow $f$:
-\[
-a_t : f \mapsto s_j, \quad s_j \in \{1, 2, \dots, S\}
-\]
+Discrete server selection:
 
-This action decides routing and load distribution across servers.
-\end{block}
-\end{frame}
-
-% ================= Frame 3: Reward =================
-\begin{frame}{Reward Design}
-\begin{block}{Objective: Balanced Load and Low Latency}
-The reward at time $t$ is computed from real server metrics:
 \[
-r_t = \underbrace{\alpha e^{- \text{avg RTT}/\tau_\text{RTT}}}_{\text{low latency}}
-      + \underbrace{\beta e^{- \text{Var}(\ell_1,\dots,\ell_S)/\tau_\text{var}}}_{\text{balanced load}}
-      + \underbrace{\text{balance bonus}}_{\text{even distribution}}
-      - \underbrace{\text{overload penalty}}_{\text{avoid overloaded servers}}
+A = \{a_1, a_2, a_3\}
 \]
 
 \begin{itemize}
-    \item $\ell_j$ = server load, $j = 1\dots S$
-    \item $\text{avg RTT} = \frac{1}{S}\sum_j rtt_j$
-    \item $\text{Var}(\ell_1,\dots,\ell_S)$ = variance of server loads
-    \item $\alpha, \beta$ = tunable reward weights
-    \item Reward is clipped: $r_t \in [-10, 10]$
+    \item $a_1$: Route to h1 (10.0.0.1)
+    \item $a_2$: Route to h2 (10.0.0.2)
+    \item $a_3$: Route to h3 (10.0.0.3)
 \end{itemize}
-\end{block}
+
+Each action:
+\begin{itemize}
+    \item Installs OpenFlow rule
+    \item Performs DNAT to backend server
+\end{itemize}
 \end{frame}
 
+% ================= Reward =================
+\begin{frame}{Reward Function}
+\textbf{Dead Server Penalty:}
+\[
+R = -1.0
+\]
 
-\begin{frame}{DRL Agent Design}
+\textbf{Action Reward:}
+\[
+R_{action} = 1 - 2 \left(\frac{C_{chosen} - C_{min}}{C_{max} - C_{min}}\right)
+\]
+
+\textbf{Coefficient of Variation:}
+\[
+CV = \frac{\sigma(C)}{\mu(C)}
+\]
+
+\textbf{Final Reward:}
+\[
+R_t = \text{clip}(R_{action} - 0.2 \cdot CV,\; -1,\; 1)
+\]
+\end{frame}
+
+% ================= DQN =================
+\begin{frame}{DQN Formulation}
+Q-function approximation:
+
+\[
+Q(s,a;\theta)
+\]
+
+\textbf{Target:}
+\[
+y_t = r_t + \gamma \max_{a'} Q(s_{t+1}, a'; \theta^-)
+\]
+
+\textbf{Loss Function:}
+\[
+L = \text{SmoothL1}(y_t - Q(s_t, a_t))
+\]
+\end{frame}
+
+% ================= Training =================
+\begin{frame}{Training Process}
+At each timestep:
+
+\begin{enumerate}
+    \item Observe $s_t$
+    \item Select $a_t$ using $\epsilon$-greedy
+    \item Execute action (install rule)
+    \item Observe $r_t, s_{t+1}$
+    \item Store $(s_t, a_t, r_t, s_{t+1})$
+\end{enumerate}
+
 \begin{itemize}
-    \item Deep Q-Network (DQN)
-    \item Online training with replay memory
-    \item Target network for stability
-    \item $\epsilon$-greedy exploration strategy
+    \item Experience Replay
+    \item Target Network Stabilization
 \end{itemize}
 \end{frame}
-\begin{frame}{Training Methodology}
+
+% ================= Hyperparameters =================
+\begin{frame}{Hyperparameters}
 \begin{itemize}
-    \item Online interaction with SDN environment
-    \item Transition storage in replay buffer
-    \item Mini-batch gradient descent updates
-    \item Periodic target network synchronization
-\end{itemize}
-\end{frame}
-\begin{frame}{Hyperparameter Configuration}
-\begin{itemize}
-    \item State dimension: 18
-    \item Action dimension: 3
-    \item Hidden layer size: 64
     \item Learning rate: $3 \times 10^{-4}$
-    \item Discount factor: 0.99
-    \item Replay buffer size: 10,000
+    \item Discount factor: $\gamma = 0.99$
+    \item Batch size: 32
+    \item Replay buffer: 10,000
+    \item $\epsilon$ decay: 0.9998
 \end{itemize}
 \end{frame}
-\begin{frame}{Integration with Ryu Controller}
-\begin{itemize}
-    \item REST-based agent–controller communication
-    \item Collection of port and flow statistics
-    \item Dynamic flow rule installation
-    \item Closed-loop learning and deployment
-\end{itemize}
-\end{frame}
+
+% ================= Metrics =================
 \begin{frame}{Evaluation Metrics}
-\begin{itemize}
-    \item Throughput
-    \item End-to-end latency
-    \item Jain’s Fairness Index
-    \item Link load variance
-    \item Server CPU and memory utilization
-\end{itemize}
-\end{frame}
-\begin{frame}{Tools Used}
-\begin{itemize}
-    \item Ryu Controller, Mininet, Open vSwitch
-    \item Python, PyTorch, NumPy, Matplotlib
-    \item Iperf, Apache Bench, Wireshark
-    \item Arch Linux development environment
-\end{itemize}
+\textbf{Average Latency:}
+\[
+L_{avg} = \frac{1}{N} \sum_{i=1}^{N} L_i
+\]
+
+\textbf{Jain’s Fairness Index:}
+\[
+J = \frac{\left(\sum x_i\right)^2}{n \sum x_i^2}
+\]
+
+\textbf{Connection Share:}
+\[
+S_i = \frac{C_i}{\sum_j C_j}
+\]
 \end{frame}
